@@ -534,18 +534,38 @@ def visualize_multi_mbon():
     # ========== 4. 泛化响应 (多MBON) ==========
     ax4 = axes[1, 1]
     
-    # 生成变体
-    variants = dataset.generate_variants(odor_a, n_samples=5, noise_level=0.2, seed=300)
+    # 测试不同噪声水平的泛化响应
+    noise_levels = [0.0, 0.1, 0.2, 0.3, 0.4]
     
-    # 获取泛化响应
-    responses = evaluator.evaluate_generalization(odor_a, variants)
+    # 存储每个噪声水平下各 MBON 的平均响应
+    responses_by_noise = {i: [] for i in range(3)}
     
+    for noise in noise_levels:
+        if noise == 0:
+            # 训练气味本身
+            resp, _ = model.predict(odor_a)
+            for i in range(3):
+                responses_by_noise[i].append(resp[i])
+        else:
+            # 生成噪声变体并计算平均响应
+            variants = dataset.generate_variants(odor_a, n_samples=10, noise_level=noise, seed=int(noise*1000))
+            avg_resp = np.zeros(3)
+            for v in variants:
+                resp, _ = model.predict(v)
+                avg_resp += resp
+            avg_resp /= len(variants)
+            for i in range(3):
+                responses_by_noise[i].append(avg_resp[i])
+    
+    # 绘制每个 MBON 的泛化曲线
+    colors = ['#ff6b6b', '#4ecdc4', '#45b7d1']
     for i in range(3):
-        ax4.plot(range(5), responses[:, i], 'o-', label=f'MBON {i}', linewidth=2, markersize=8)
+        ax4.plot(noise_levels, responses_by_noise[i], 'o-', 
+                label=f'MBON {i}', linewidth=2, markersize=8, color=colors[i])
     
-    ax4.set_xlabel('Variant Index')
-    ax4.set_ylabel('MBON Response')
-    ax4.set_title('4. Generalization Response (Multi-MBON)')
+    ax4.set_xlabel('Noise Level')
+    ax4.set_ylabel('Mean MBON Response')
+    ax4.set_title('4. Generalization: Response vs Noise Level')
     ax4.legend()
     ax4.grid(True, alpha=0.3)
     
