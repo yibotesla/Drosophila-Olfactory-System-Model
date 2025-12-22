@@ -2,6 +2,8 @@
 
 一个基于生物学原理的果蝇嗅觉神经回路计算模型，模拟从感知信息编码到行为决策输出的完整神经回路。
 
+Group members： Yibo Yu, Yuyuan Lu, Jiahao Tang, Zhouhang Tao
+
 ## 项目概述
 
 本模型实现了果蝇嗅觉系统的三层前馈网络架构：
