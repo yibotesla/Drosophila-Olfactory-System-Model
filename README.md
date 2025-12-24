@@ -1,4 +1,4 @@
-# 果蝇嗅觉系统计算模型 (Drosophila Olfactory System Model)
+# 蕈体嗅觉网络模型MBONet (Mushroom Body Olfactory Network)
 
 一个基于生物学原理的果蝇嗅觉神经回路计算模型，模拟从感知信息编码到行为决策输出的完整神经回路。
 
